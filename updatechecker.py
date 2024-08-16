@@ -1,50 +1,36 @@
-import os
 import requests
 
-# URLs for the version, update checker, and executable
-version_url = "https://raw.githubusercontent.com/Aidwyd/Ni/main/version"
-update_checker_url = "https://raw.githubusercontent.com/Aidwyd/Ni/main/updatechecker"
-new_exe_url = "https://raw.github.com/Aidwyd/Ni/blob/main/BediumACL.exe"
-
-# Local paths
-local_version_file = "version.txt"
-update_checker_file = "main.py"
-new_exe_file = "new_version.exe"
-
-# Function to download a file from a URL
-def download_file(url, filename):
-    response = requests.get(url)
-    with open(filename, "wb") as file:
-        file.write(response.content)
-
-# Get the remote version
-remote_version = requests.get(version_url).text.strip()
-
-# Read the local version
-if os.path.exists(local_version_file):
-    with open(local_version_file, "r") as file:
-        local_version = file.read().strip()
-else:
-    local_version = "0"
-
-# Compare versions
-if remote_version > local_version:
-    print("A new version is available. Downloading the update...")
-
-    # Download the update checker
-    download_file(update_checker_url, update_checker_file)
+def check_for_update(current_version):
+    version_url = "https://raw.githubusercontent.com/Aidwyd/Ni/main/version"
     
-    # Download the new executable
-    download_file(new_exe_url, new_exe_file)
-    
-    # Update the local version file
-    with open(local_version_file, "w") as file:
-        file.write(remote_version)
+    try:
+        response = requests.get(version_url)
+        latest_version = response.text.strip()
 
-    print(f"Update complete. New version {remote_version} downloaded.")
-    
-else:
-    print("You are already using the latest version.")
+        if latest_version > current_version:
+            print(f"New version {latest_version} is available! Downloading the update...")
+            download_update()
+        else:
+            print("You are using the latest version.")
+    except Exception as e:
+        print(f"Failed to check for updates: {e}")
 
-# Proceed with the batch script (or any other operation)
+def download_update():
+    update_url = "https://raw.githubusercontent.com/Aidwyd/Ni/main/BediumACL.exe"
 
+    try:
+        update_response = requests.get(update_url)
+        with open("new_update.exe", "wb") as f:
+            f.write(update_response.content)
+        print("Update downloaded successfully.")
+    except Exception as e:
+        print(f"Failed to download the update: {e}")
+
+if __name__ == "__main__":
+    import sys
+    if len(sys.argv) > 1:
+        current_version = sys.argv[1]
+    else:
+        current_version = "0.0"
+
+    check_for_update(current_version)
