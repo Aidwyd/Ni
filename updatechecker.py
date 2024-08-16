@@ -4,7 +4,7 @@ import requests
 # URLs for the version, update checker, and executable
 version_url = "https://raw.githubusercontent.com/Aidwyd/Ni/main/version"
 update_checker_url = "https://raw.githubusercontent.com/Aidwyd/Ni/main/updatechecker"
-new_exe_url = "https://raw.githubusercontent.com/Aidwyd/Ni/main/updateexe"
+new_exe_url = "https://raw.github.com/Aidwyd/Ni/blob/main/BediumACL.exe"
 
 # Local paths
 local_version_file = "version.txt"
